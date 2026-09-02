@@ -1,7 +1,7 @@
 package be_test
 
 import (
-	"github.com/carlmjohnson/be"
+	"github.com/earthboundkid/assert"
 )
 
 func ExampleDeepEqual() {

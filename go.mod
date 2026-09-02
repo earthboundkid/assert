@@ -1,3 +1,3 @@
-module github.com/carlmjohnson/be
+module github.com/earthboundkid/assert
 
-go 1.23
+go 1.27

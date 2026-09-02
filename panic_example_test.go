@@ -1,6 +1,6 @@
 package be_test
 
-import "github.com/carlmjohnson/be"
+import "github.com/earthboundkid/assert"
 
 func ExamplePanicked() {
 	// mock *testing.T for example purposes

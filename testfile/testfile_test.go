@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/carlmjohnson/be"
-	"github.com/carlmjohnson/be/testfile"
+	be "github.com/earthboundkid/assert"
+	"github.com/earthboundkid/assert/testfile"
 )
 
 func runPaths(t *testing.T, inpath string) []string {

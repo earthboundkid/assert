@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/carlmjohnson/be"
+	"github.com/earthboundkid/assert"
 )
 
 type testingTB struct {

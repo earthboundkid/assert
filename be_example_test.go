@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/carlmjohnson/be"
+	"github.com/earthboundkid/assert"
 )
 
 func Example() {

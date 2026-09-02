@@ -3,7 +3,7 @@ package be_test
 import (
 	"testing"
 
-	"github.com/carlmjohnson/be"
+	"github.com/earthboundkid/assert"
 )
 
 func runTest(test func(*testing.T)) bool {

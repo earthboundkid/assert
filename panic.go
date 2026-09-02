@@ -1,4 +1,4 @@
-package be
+package assert
 
 // Panicked runs the callback and returns the recovered panic, if any.
 func Panicked(fn func()) (r any) {

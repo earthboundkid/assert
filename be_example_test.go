@@ -1,11 +1,11 @@
-package be_test
+package assert_test
 
 import (
 	"errors"
 	"os"
 	"strings"
 
-	"github.com/earthboundkid/assert"
+	be "github.com/earthboundkid/assert"
 )
 
 func Example() {

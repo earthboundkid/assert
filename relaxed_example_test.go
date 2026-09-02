@@ -1,9 +1,9 @@
-package be_test
+package assert_test
 
 import (
 	"testing"
 
-	"github.com/earthboundkid/assert"
+	be "github.com/earthboundkid/assert"
 )
 
 func ExampleRelaxed() {

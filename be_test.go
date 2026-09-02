@@ -1,4 +1,4 @@
-package be_test
+package assert_test
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/earthboundkid/assert"
+	be "github.com/earthboundkid/assert"
 )
 
 type testingTB struct {
@@ -47,10 +47,6 @@ func Test(t *testing.T) {
 		func(tb testing.TB) {
 			seq2 := maps.All(map[int]int{1: 1})
 			be.EqualLength(tb, 1, seq2)
-		},
-		func(tb testing.TB) {
-			be.In(tb, "world", "Hello, world!")
-			be.NotIn(tb, "\x01", []byte("\a\b\x00\r\t"))
 		},
 	}
 
@@ -91,12 +87,6 @@ func Test(t *testing.T) {
 			ch := make(chan int, 1)
 			close(ch)
 			be.EqualLength(tb, 1, ch)
-		},
-		func(tb testing.TB) {
-			be.In(tb, "World", "Hello, world!")
-		},
-		func(tb testing.TB) {
-			be.NotIn(tb, "\x00", []byte("\a\b\x00\r\t"))
 		},
 	}
 

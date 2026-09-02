@@ -1,4 +1,4 @@
-// Package be is a minimalist test assertion helper library.
+// Package assert is a minimalist test assertion helper library.
 //
 // # Philosophy
 //
@@ -11,4 +11,4 @@
 // Every test in the be package requires a [testing.TB] as its first argument. There are various clever ways to get the testing.TB implicitly,[*] but package be is designed to be simple and explicit, so it's easiest to just always pass in a testing.TB the boring way.
 //
 // [*]: https://dave.cheney.net/2019/12/08/dynamically-scoped-variables-in-go
-package be
+package assert

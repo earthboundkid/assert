@@ -1,4 +1,4 @@
-package be
+package assert
 
 import (
 	"testing"

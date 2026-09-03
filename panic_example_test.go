@@ -4,7 +4,7 @@ import (
 	"github.com/earthboundkid/assert"
 )
 
-func ExamplePanicked() {
+func ExampleTester_Panicked() {
 	// mock *testing.T for example purposes
 	be := assert.Relaxed(&mockingT{})
 
@@ -13,9 +13,9 @@ func ExamplePanicked() {
 	}
 
 	// Test that division by zero panics
-	be.Nonzero(assert.Panicked(func() {
+	be.Panicked(func() {
 		divide(1, 0)
-	}))
+	})
 
 	// Because a panic fails a test by default,
 	// testing that an operation does not panic is less necessary,
@@ -30,7 +30,7 @@ func ExamplePanicked() {
 		{0, 0, 0xbadc0ffee, true},
 	} {
 		got := 0xbadc0ffee
-		panicVal := assert.Panicked(func() {
+		panicVal := assert.Catch(func() {
 			got = divide(testcase.num, testcase.denom)
 		})
 		be.Equal(got, testcase.want)

@@ -2,21 +2,23 @@ package assert
 
 import (
 	"errors"
-	"testing"
 )
 
 // ErrorIs calls t.Fatalf if got is not want according to [errors.Is].
-func ErrorIs(t testing.TB, want, got error) {
-	t.Helper()
+func (be Tester) ErrorIs(got, want error) Tester {
+	be.tb.Helper()
 	if !errors.Is(got, want) {
-		t.Fatalf("got errors.Is(%v, %v) == false", got, want)
+		be.fatalf("got errors.Is(%v, %v) == false", got, want)
 	}
+	return be
 }
 
 // ErrorAs calls t.Fatalf if got cannot be assigned to want by [errors.As].
-func ErrorAs[T error](t testing.TB, want *T, got error) {
-	t.Helper()
-	if !errors.As(got, want) {
-		t.Fatalf("got errors.As(%v, %T) == false", got, want)
+func (be Tester) ErrorAsType[T error](got error) error {
+	be.tb.Helper()
+	err, ok := errors.AsType[T](got)
+	if !ok {
+		be.fatalf("got errors.AsType[%T](%v) == false", *new(T), got)
 	}
+	return err
 }

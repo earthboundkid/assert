@@ -19,7 +19,7 @@ func Relaxed(t testing.TB) Tester {
 	return Tester{t, true}
 }
 
-func (be *Tester) fail(format string, args ...any) {
+func (be Tester) fatalf(format string, args ...any) {
 	be.tb.Helper()
 	be.tb.Logf(format, args...)
 	if be.relaxed {
@@ -33,7 +33,7 @@ func (be *Tester) fail(format string, args ...any) {
 func (be Tester) Equal[T comparable](got, want T) Tester {
 	be.tb.Helper()
 	if want != got {
-		be.fail("want: %v; got: %v", want, got)
+		be.fatalf("want: %v; got: %v", want, got)
 	}
 	return be
 }
@@ -42,7 +42,7 @@ func (be Tester) Equal[T comparable](got, want T) Tester {
 func (be Tester) Unequal[T comparable](got, bad T) Tester {
 	be.tb.Helper()
 	if got == bad {
-		be.fail("got: %v", got)
+		be.fatalf("got: %v", got)
 	}
 	return be
 }
@@ -51,7 +51,7 @@ func (be Tester) Unequal[T comparable](got, bad T) Tester {
 func (be Tester) AllEqual[T comparable](got, want []T) Tester {
 	be.tb.Helper()
 	if !slices.Equal(got, want) {
-		be.fail("got: %v; want: %v", got, want)
+		be.fatalf("got: %v; want: %v", got, want)
 	}
 	return be
 }
@@ -60,7 +60,7 @@ func (be Tester) AllEqual[T comparable](got, want []T) Tester {
 func (be Tester) Zero[T any](value T) Tester {
 	be.tb.Helper()
 	if truthy(value) {
-		be.fail("got: %v", value)
+		be.fatalf("got: %v", value)
 	}
 	return be
 }
@@ -69,7 +69,7 @@ func (be Tester) Zero[T any](value T) Tester {
 func (be Tester) Nonzero[T any](value T) Tester {
 	be.tb.Helper()
 	if !truthy(value) {
-		be.fail("got: %v", value)
+		be.fatalf("got: %v", value)
 	}
 	return be
 }
@@ -94,7 +94,7 @@ func reflectValue(vp any) bool {
 func (be Tester) OK[T any](value T, err error) T {
 	be.tb.Helper()
 	if err != nil {
-		be.fail("err != nil: %v", err)
+		be.fatalf("err != nil: %v", err)
 		return *new(T)
 	}
 	return value
@@ -103,7 +103,7 @@ func (be Tester) OK[T any](value T, err error) T {
 func (be Tester) True(value bool) Tester {
 	be.tb.Helper()
 	if !value {
-		be.fail("got: false")
+		be.fatalf("got: false")
 	}
 	return be
 }
@@ -111,7 +111,7 @@ func (be Tester) True(value bool) Tester {
 func (be Tester) False(value bool) Tester {
 	be.tb.Helper()
 	if value {
-		be.fail("got: true")
+		be.fatalf("got: true")
 	}
 	return be
 }

@@ -1,17 +1,19 @@
 package assert_test
 
-import be "github.com/earthboundkid/assert"
+import (
+	"github.com/earthboundkid/assert"
+)
 
 func ExamplePanicked() {
 	// mock *testing.T for example purposes
-	t := &mockingT{}
+	be := assert.Relaxed(&mockingT{})
 
 	divide := func(num, denom int) int {
 		return num / denom
 	}
 
 	// Test that division by zero panics
-	be.Nonzero(t, be.Panicked(func() {
+	be.Nonzero(assert.Panicked(func() {
 		divide(1, 0)
 	}))
 
@@ -28,11 +30,11 @@ func ExamplePanicked() {
 		{0, 0, 0xbadc0ffee, true},
 	} {
 		got := 0xbadc0ffee
-		panicVal := be.Panicked(func() {
+		panicVal := assert.Panicked(func() {
 			got = divide(testcase.num, testcase.denom)
 		})
-		be.Equal(t, testcase.want, got)
-		be.Equal(t, testcase.shouldPanic, panicVal != nil)
+		be.Equal(got, testcase.want)
+		be.Equal(panicVal != nil, testcase.shouldPanic)
 	}
 	// Output:
 }

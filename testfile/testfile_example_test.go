@@ -5,12 +5,13 @@ import (
 	"strings"
 	"testing"
 
-	be "github.com/earthboundkid/assert"
+	"github.com/earthboundkid/assert"
 	"github.com/earthboundkid/assert/testfile"
 )
 
 func Example() {
 	t := &testing.T{}
+	be := assert.Relaxed(t)
 
 	// Make some test data
 	input := "Hello, World!"
@@ -20,7 +21,7 @@ func Example() {
 	// Read files
 	file := testfile.Read(t, "example/upper.txt")
 	// Do some testing
-	be.Equal(t, file, got)
+	be.Equal(got, file)
 	// Use the equality helper
 	testfile.Equal(t, "example/upper.txt", got)
 	// If the files aren't equal,
@@ -36,7 +37,7 @@ func Example() {
 	// Read from a JSON file
 	var s2 testcase
 	testfile.ReadJSON(t, "example/upper.json", &s2)
-	be.Equal(t, s, s2)
+	be.Equal(s, s2)
 	// Test that s equals the contents of a file when serialized
 	testfile.EqualJSON(t, "example/upper.json", s)
 

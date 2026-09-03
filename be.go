@@ -6,44 +6,72 @@ import (
 	"testing"
 )
 
-// Equal calls t.Fatalf if want != got.
-func Equal[T comparable](t testing.TB, want, got T) {
-	t.Helper()
-	if want != got {
-		t.Fatalf("want: %v; got: %v", want, got)
+type Tester struct {
+	tb      testing.TB
+	relaxed bool
+}
+
+func Strict(t testing.TB) Tester {
+	return Tester{t, false}
+}
+
+func Relaxed(t testing.TB) Tester {
+	return Tester{t, true}
+}
+
+func (be *Tester) fail(format string, args ...any) {
+	be.tb.Helper()
+	be.tb.Logf(format, args...)
+	if be.relaxed {
+		be.tb.Fail()
+	} else {
+		be.tb.FailNow()
 	}
+}
+
+// Equal calls t.Fatalf if want != got.
+func (be Tester) Equal[T comparable](got, want T) Tester {
+	be.tb.Helper()
+	if want != got {
+		be.fail("want: %v; got: %v", want, got)
+	}
+	return be
 }
 
 // Unequal calls t.Fatalf if got == bad.
-func Unequal[T comparable](t testing.TB, bad, got T) {
-	t.Helper()
+func (be Tester) Unequal[T comparable](got, bad T) Tester {
+	be.tb.Helper()
 	if got == bad {
-		t.Fatalf("got: %v", got)
+		be.fail("got: %v", got)
 	}
+	return be
 }
 
 // AllEqual calls t.Fatalf if want != got.
-func AllEqual[T comparable](t testing.TB, want, got []T) {
-	t.Helper()
-	if !slices.Equal(want, got) {
-		t.Fatalf("want: %v; got: %v", want, got)
+func (be Tester) AllEqual[T comparable](got, want []T) Tester {
+	be.tb.Helper()
+	if !slices.Equal(got, want) {
+		be.fail("got: %v; want: %v", got, want)
 	}
+	return be
 }
 
 // Zero calls t.Fatalf if value != the zero value for T.
-func Zero[T any](t testing.TB, value T) {
-	t.Helper()
+func (be Tester) Zero[T any](value T) Tester {
+	be.tb.Helper()
 	if truthy(value) {
-		t.Fatalf("got: %v", value)
+		be.fail("got: %v", value)
 	}
+	return be
 }
 
 // Nonzero calls t.Fatalf if value == the zero value for T.
-func Nonzero[T any](t testing.TB, value T) {
-	t.Helper()
+func (be Tester) Nonzero[T any](value T) Tester {
+	be.tb.Helper()
 	if !truthy(value) {
-		t.Fatalf("got: %v", value)
+		be.fail("got: %v", value)
 	}
+	return be
 }
 
 func truthy[T any](v T) bool {
@@ -63,26 +91,27 @@ func reflectValue(vp any) bool {
 	}
 }
 
-// NilErr calls t.Fatalf if err is not nil.
-func NilErr(t testing.TB, err error) {
-	t.Helper()
+func (be Tester) OK[T any](value T, err error) T {
+	be.tb.Helper()
 	if err != nil {
-		t.Fatalf("got: %v", err)
+		be.fail("err != nil: %v", err)
+		return *new(T)
 	}
+	return value
 }
 
-// True calls t.Fatalf if value is not true.
-func True(t testing.TB, value bool) {
-	t.Helper()
+func (be Tester) True(value bool) Tester {
+	be.tb.Helper()
 	if !value {
-		t.Fatalf("got: false")
+		be.fail("got: false")
 	}
+	return be
 }
 
-// False calls t.Fatalf if value is not false.
-func False(t testing.TB, value bool) {
-	t.Helper()
+func (be Tester) False(value bool) Tester {
+	be.tb.Helper()
 	if value {
-		t.Fatalf("got: true")
+		be.fail("got: true")
 	}
+	return be
 }

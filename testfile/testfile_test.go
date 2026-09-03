@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	be "github.com/earthboundkid/assert"
+	"github.com/earthboundkid/assert"
 	"github.com/earthboundkid/assert/testfile"
 )
 
@@ -28,7 +28,7 @@ func TestRun(t *testing.T) {
 	}
 	for _, tc := range cases {
 		got := runPaths(t, tc.InPath)
-		be.Equal(t, tc.WantFound, strings.Join(got, ","))
+		assert.Relaxed(t).Equal(strings.Join(got, ","), tc.WantFound)
 	}
 }
 
@@ -97,19 +97,20 @@ func TestCases(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			be.Equal(t, tc.want, runTest(tc.f))
+			assert.Relaxed(t).Equal(runTest(tc.f), tc.want)
 		})
 	}
 }
 
 func TestSetEnv(t *testing.T) {
+	be := assert.Strict(t)
 	dir := t.TempDir()
 	path := filepath.Join(dir, "example.txt")
 	failedPath := filepath.Join(dir, "-failed-example.txt")
 
 	// If testfile.Equal fails
 	testfile.Write(t, path, "1")
-	be.False(t, runTest(func(t *testing.T) {
+	be.False(runTest(func(t *testing.T) {
 		testfile.Equal(t, path, "2")
 	}))
 	// it writes a -failed file.
@@ -121,7 +122,7 @@ func TestSetEnv(t *testing.T) {
 	// If TESTFILE_UPDATE is set,
 	t.Setenv("TESTFILE_UPDATE", "ON")
 	// the test still fails
-	be.False(t, runTest(func(t *testing.T) {
+	be.False(runTest(func(t *testing.T) {
 		testfile.Equal(t, path, "3")
 	}))
 	// but it doesn't write a failed path,

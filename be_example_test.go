@@ -57,10 +57,10 @@ func Example() {
 	// want: world; got: hello
 	// got: goodbye
 	// got: [3 2 1]; want: [1 2 3]
+	// err != nil: open nosuchfile: no such file or directory
 	// got: <nil>
 	// got errors.Is(<nil>, permission denied) == false
 	// got errors.AsType[*fs.PathError]((O_o)) == false
-	// err != nil: open nosuchfile: no such file or directory
 	// missing match: /World/ !~ "hello, world"
 	// unexpected match: /^\W*$/ =~ "\a\b\x00\r\t"
 	// want len(seq) == 1; got at least 2

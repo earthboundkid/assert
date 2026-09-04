@@ -1,7 +1,10 @@
 package assert_test
 
 import (
+	"cmp"
 	"fmt"
+	"io"
+	"os"
 	"runtime"
 	"sync"
 	"testing"
@@ -12,6 +15,7 @@ type mockingT struct {
 	m                       sync.Mutex
 	hasFailed, hasFailedNow bool
 	cleanups                []func()
+	w                       io.Writer
 }
 
 func (m *mockingT) setFailed(b bool) {
@@ -63,7 +67,10 @@ func (m *mockingT) Cleanup(f func()) {
 
 func (*mockingT) Log(args ...any) { fmt.Println(args...) }
 
-func (*mockingT) Logf(format string, args ...any) { fmt.Printf(format+"\n", args...) }
+func (m *mockingT) Logf(format string, args ...any) {
+	out := cmp.Or(m.w, io.Writer(os.Stdout))
+	fmt.Fprintf(out, format+"\n", args...)
+}
 
 func (*mockingT) Helper() {}
 

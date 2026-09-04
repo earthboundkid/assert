@@ -1,92 +1,89 @@
 package assert_test
 
-// type testingTB struct {
-// 	testing.TB
-// 	failed bool
-// 	w      io.Writer
-// }
+import (
+	"errors"
+	"maps"
+	"strings"
+	"testing"
+	"time"
 
-// func (t *testingTB) Helper() {}
+	"github.com/earthboundkid/assert"
+)
 
-// func (t *testingTB) Fatalf(format string, args ...any) {
-// 	t.failed = true
-// 	fmt.Fprintf(t.w, format, args...)
-// }
+func Test(t *testing.T) {
+	okayTests := []func(be assert.Tester){
+		func(be assert.Tester) { be.Zero(time.Time{}.Local()) },
+		func(be assert.Tester) { be.Zero([]string(nil)) },
+		func(be assert.Tester) { be.Nonzero([]string{""}) },
+		func(be assert.Tester) { _ = be.OK(func() (int, error) { return 1, nil }()) },
+		func(be assert.Tester) { be.True(true) },
+		func(be assert.Tester) { be.False(false) },
+		func(be assert.Tester) { be.EqualLength(map[int]int{}, 0) },
+		func(be assert.Tester) { be.EqualLength(map[int]int{1: 1}, 1) },
+		func(be assert.Tester) {
+			ch := make(chan int, 1)
+			be.EqualLength(ch, 0)
+		},
+		func(be assert.Tester) {
+			ch := make(chan int, 1)
+			ch <- 1
+			be.EqualLength(ch, 1)
+		},
+		func(be assert.Tester) {
+			seq2 := maps.All(map[int]int{1: 1})
+			be.EqualLength(seq2, 1)
+		},
+	}
 
-// func Test(t *testing.T) {
-// 	okayTests := []func(tb testing.TB){
-// 		func(tb testing.TB) { be.Zero(tb, time.Time{}.Local()) },
-// 		func(tb testing.TB) { be.Zero(tb, []string(nil)) },
-// 		func(tb testing.TB) { be.Nonzero(tb, []string{""}) },
-// 		func(tb testing.TB) { be.NilErr(tb, nil) },
-// 		func(tb testing.TB) { be.True(tb, true) },
-// 		func(tb testing.TB) { be.False(tb, false) },
-// 		func(tb testing.TB) { be.EqualLength(tb, 0, map[int]int{}) },
-// 		func(tb testing.TB) { be.EqualLength(tb, 1, map[int]int{1: 1}) },
-// 		func(tb testing.TB) {
-// 			ch := make(chan int, 1)
-// 			be.EqualLength(tb, 0, ch)
-// 		},
-// 		func(tb testing.TB) {
-// 			ch := make(chan int, 1)
-// 			ch <- 1
-// 			be.EqualLength(tb, 1, ch)
-// 		},
-// 		func(tb testing.TB) {
-// 			seq2 := maps.All(map[int]int{1: 1})
-// 			be.EqualLength(tb, 1, seq2)
-// 		},
-// 	}
+	for _, test := range okayTests {
+		var buf strings.Builder
+		m := &mockingT{w: &buf}
+		test(assert.Relaxed(m))
+		if m.Failed() {
+			t.Fatal("failed too soon")
+		}
+		if buf.String() != "" {
+			t.Fatal("wrote too much")
+		}
+	}
 
-// 	for _, test := range okayTests {
-// 		var buf strings.Builder
-// 		tb := &testingTB{w: &buf}
-// 		test(tb)
-// 		if tb.failed {
-// 			t.Fatal("failed too soon")
-// 		}
-// 		if buf.String() != "" {
-// 			t.Fatal("wrote too much")
-// 		}
-// 	}
+	badTests := []func(be assert.Tester){
+		func(be assert.Tester) { be.AllEqual([]string{}, []string{""}) },
+		func(be assert.Tester) { be.Nonzero(time.Time{}.Local()) },
+		func(be assert.Tester) { be.Zero([]string{""}) },
+		func(be assert.Tester) { be.Nonzero([]string(nil)) },
+		func(be assert.Tester) { be.OK(func() (int, error) { return 0, errors.New("") }()) },
+		func(be assert.Tester) { be.True(false) },
+		func(be assert.Tester) { be.False(true) },
+		func(be assert.Tester) {
+			seq2 := maps.All(map[int]int{1: 1})
+			be.EqualLength(seq2, 0)
+		},
+		func(be assert.Tester) {
+			ch := make(chan int, 1)
+			be.EqualLength(ch, 1)
+		},
+		func(be assert.Tester) {
+			ch := make(chan int, 1)
+			ch <- 1
+			be.EqualLength(ch, 0)
+		},
+		func(be assert.Tester) {
+			ch := make(chan int, 1)
+			close(ch)
+			be.EqualLength(ch, 1)
+		},
+	}
 
-// 	badTests := []func(tb testing.TB){
-// 		func(tb testing.TB) { be.AllEqual(tb, []string{}, []string{""}) },
-// 		func(tb testing.TB) { be.Nonzero(tb, time.Time{}.Local()) },
-// 		func(tb testing.TB) { be.Zero(tb, []string{""}) },
-// 		func(tb testing.TB) { be.Nonzero(tb, []string(nil)) },
-// 		func(tb testing.TB) { be.NilErr(tb, errors.New("")) },
-// 		func(tb testing.TB) { be.True(tb, false) },
-// 		func(tb testing.TB) { be.False(tb, true) },
-// 		func(tb testing.TB) {
-// 			seq2 := maps.All(map[int]int{1: 1})
-// 			be.EqualLength(tb, 0, seq2)
-// 		},
-// 		func(tb testing.TB) {
-// 			ch := make(chan int, 1)
-// 			be.EqualLength(tb, 1, ch)
-// 		},
-// 		func(tb testing.TB) {
-// 			ch := make(chan int, 1)
-// 			ch <- 1
-// 			be.EqualLength(tb, 0, ch)
-// 		},
-// 		func(tb testing.TB) {
-// 			ch := make(chan int, 1)
-// 			close(ch)
-// 			be.EqualLength(tb, 1, ch)
-// 		},
-// 	}
-
-// 	for _, test := range badTests {
-// 		var buf strings.Builder
-// 		tb := &testingTB{w: &buf}
-// 		test(tb)
-// 		if !tb.failed {
-// 			t.Fatal("did not fail")
-// 		}
-// 		if buf.String() == "" {
-// 			t.Fatal("wrote too little")
-// 		}
-// 	}
-// }
+	for _, test := range badTests {
+		var buf strings.Builder
+		m := &mockingT{w: &buf}
+		test(assert.Relaxed(m))
+		if !m.Failed() {
+			t.Fatal("did not fail")
+		}
+		if buf.String() == "" {
+			t.Fatal("wrote too little")
+		}
+	}
+}

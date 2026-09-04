@@ -10,7 +10,7 @@ Inspired by [Mat Ryer](https://github.com/matryer/is) and [Alex Edwards](https:/
 - Built-in helpers for common cases like `Tester.OK` and `Tester.Equal`
 - Choose `Fail` or `FailNow` semantics depending on how you construct your `Tester` (`assert.Continue(t)` or `assert.FailNow(t)`)
 - Helpers for testing against golden files with the testfile subpackage
-- No dependencies: just uses standard library
+- No sub-dependencies: just uses standard library
 
 ## Example usage
 

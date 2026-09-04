@@ -9,9 +9,9 @@ import (
 
 type mockingT struct {
 	testing.T
-	m         sync.Mutex
-	hasFailed bool
-	cleanups  []func()
+	m                       sync.Mutex
+	hasFailed, hasFailedNow bool
+	cleanups                []func()
 }
 
 func (m *mockingT) setFailed(b bool) {
@@ -20,10 +20,24 @@ func (m *mockingT) setFailed(b bool) {
 	m.hasFailed = b
 }
 
+func (m *mockingT) FailNow() {
+	m.m.Lock()
+	defer m.m.Unlock()
+	m.hasFailed = true
+	m.hasFailedNow = true
+	runtime.Goexit()
+}
+
 func (m *mockingT) failed() bool {
 	m.m.Lock()
 	defer m.m.Unlock()
 	return m.hasFailed
+}
+
+func (m *mockingT) failedNow() bool {
+	m.m.Lock()
+	defer m.m.Unlock()
+	return m.hasFailedNow
 }
 
 func (m *mockingT) Run(name string, f func(t *testing.T)) {
@@ -47,20 +61,22 @@ func (m *mockingT) Cleanup(f func()) {
 	m.cleanups = append(m.cleanups, f)
 }
 
-func (*mockingT) Log(args ...any) {
-	fmt.Println(args...)
-}
+func (*mockingT) Log(args ...any) { fmt.Println(args...) }
+
+func (*mockingT) Logf(format string, args ...any) { fmt.Printf(format+"\n", args...) }
 
 func (*mockingT) Helper() {}
 
 func (m *mockingT) Fatalf(format string, args ...any) {
 	m.Errorf(format, args...)
-	runtime.Goexit()
+	m.FailNow()
 }
+
+func (m *mockingT) Fail() { m.setFailed(true) }
 
 func (m *mockingT) Errorf(format string, args ...any) {
+	m.Logf(format, args...)
 	m.setFailed(true)
-	fmt.Printf(format+"\n", args...)
 }
 
-func (m *mockingT) Failed() bool { return m.failed() }
+func (m *mockingT) Failed() bool { return m.failed() || m.failedNow() }

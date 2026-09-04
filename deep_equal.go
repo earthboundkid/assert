@@ -4,7 +4,9 @@ import (
 	"reflect"
 )
 
-// DeepEqual calls t.Fatalf if want and got are different according to reflect.DeepEqual.
+// DeepEqual asserts got is [reflect.DeepEqual] to want.
+//
+// Prefer to use [SlicesEqual] if possible.
 func (be Tester) DeepEqual[T any](got, want T) Tester {
 	be.tb.Helper()
 	// Pass as pointers to get around the nil-interface problem

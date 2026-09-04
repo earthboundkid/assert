@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-// Match calls t.Fatalf if got does not match the [regexp] pattern.
+// Match asserts got matches the [regexp] pattern.
 //
 // The pattern must compile.
 func (be Tester) Match[byteseq ~string | ~[]byte](got byteseq, pattern string) Tester {
@@ -17,10 +17,10 @@ func (be Tester) Match[byteseq ~string | ~[]byte](got byteseq, pattern string) T
 	return be
 }
 
-// NoMatch calls t.Fatalf if got matches the [regexp] pattern.
+// NotMatch asserts got does not matches the [regexp] pattern.
 //
 // The pattern must compile.
-func (be Tester) NoMatch[byteseq ~string | ~[]byte](got byteseq, pattern string) Tester {
+func (be Tester) NotMatch[byteseq ~string | ~[]byte](got byteseq, pattern string) Tester {
 	be.tb.Helper()
 	reg := regexp.MustCompile(pattern)
 	if match(reg, got) {

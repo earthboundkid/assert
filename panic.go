@@ -9,6 +9,7 @@ func Catch(fn func()) (r any) {
 	return
 }
 
+// Panicked asserts that fn panics when run.
 func (be Tester) Panicked(fn func()) Tester {
 	be.tb.Helper()
 	if pval := Catch(fn); pval == nil {

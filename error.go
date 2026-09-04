@@ -4,7 +4,20 @@ import (
 	"errors"
 )
 
-// ErrorIs calls t.Fatalf if got is not want according to [errors.Is].
+// OK asserts that error is nil and returns value.
+// Typical use is like
+//
+//	v := be.OK(canFail())
+func (be Tester) OK[T any](value T, err error) T {
+	be.tb.Helper()
+	if err != nil {
+		be.fatalf("err != nil: %v", err)
+		return *new(T)
+	}
+	return value
+}
+
+// ErrorIs asserts that got [errors.Is] want.
 func (be Tester) ErrorIs(got, want error) Tester {
 	be.tb.Helper()
 	if !errors.Is(got, want) {
@@ -13,7 +26,7 @@ func (be Tester) ErrorIs(got, want error) Tester {
 	return be
 }
 
-// ErrorAs calls t.Fatalf if got cannot be assigned to want by [errors.As].
+// ErrorAsType asserts [errors.AsType] can unwrap got as T.
 func (be Tester) ErrorAsType[T error](got error) T {
 	be.tb.Helper()
 	err, ok := errors.AsType[T](got)

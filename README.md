@@ -1,4 +1,5 @@
-# Assert [![Go Reference](https://pkg.go.dev/badge/github.com/earthboundkid/assert.svg)](https://pkg.go.dev/github.com/earthboundkid/assert) [![Go Report Card](https://goreportcard.com/badge/github.com/earthboundkid/assert)](https://goreportcard.com/report/github.com/earthboundkid/assert) [![Coverage Status](https://coveralls.io/repos/github/earthboundkid/assert/badge.svg)](https://coveralls.io/github/earthboundkid/assert) [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
+# Assert [![Go Reference](https://pkg.go.dev/badge/github.com/earthboundkid/assert.svg)](https://pkg.go.dev/github.com/earthboundkid/assert) [![Coverage Status](https://coveralls.io/repos/github/earthboundkid/assert/badge.svg)](https://coveralls.io/github/earthboundkid/assert)
+
 Package assert is the minimalist testing helper for Go.
 
 Inspired by [Mat Ryer](https://github.com/matryer/is) and [Alex Edwards](https://www.alexedwards.net/blog/easy-test-assertions-with-go-generics).

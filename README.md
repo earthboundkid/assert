@@ -26,8 +26,8 @@ be.Equal("hello", "world")    // bad
 // Test two equal strings
 be.Equal("goodbye", "goodbye") // good
 // Test equal integers, etc.
-be.Equal(200, resp.StatusCode)
-be.Equal(tc.wantPtr, gotPtr)
+be.Equal(resp.StatusCode, 200)
+be.Equal(gotPtr, tc.wantPtr)
 
 // Test for inequality
 be.NotEqual("hello", "world")    // good

@@ -5,23 +5,16 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"runtime"
 	"sync"
 	"testing"
 )
 
 type mockingT struct {
 	testing.T
-	m                       sync.Mutex
-	hasFailed, hasFailedNow bool
-	cleanups                []func()
-	w                       io.Writer
-}
-
-func (m *mockingT) setFailed(b bool) {
-	m.m.Lock()
-	defer m.m.Unlock()
-	m.hasFailed = b
+	m            sync.Mutex
+	hasFailed    bool
+	hasFailedNow bool
+	w            io.Writer
 }
 
 func (m *mockingT) FailNow() {
@@ -29,43 +22,7 @@ func (m *mockingT) FailNow() {
 	defer m.m.Unlock()
 	m.hasFailed = true
 	m.hasFailedNow = true
-	runtime.Goexit()
 }
-
-func (m *mockingT) failed() bool {
-	m.m.Lock()
-	defer m.m.Unlock()
-	return m.hasFailed
-}
-
-func (m *mockingT) failedNow() bool {
-	m.m.Lock()
-	defer m.m.Unlock()
-	return m.hasFailedNow
-}
-
-func (m *mockingT) Run(name string, f func(t *testing.T)) {
-	m.cleanups = nil
-	m.setFailed(false)
-	ch := make(chan struct{})
-	defer func() {
-		for _, f := range m.cleanups {
-			defer f()
-		}
-	}()
-	// Use a goroutine so Fatalf can call Goexit
-	go func() {
-		defer close(ch)
-		f(&m.T)
-	}()
-	<-ch
-}
-
-func (m *mockingT) Cleanup(f func()) {
-	m.cleanups = append(m.cleanups, f)
-}
-
-func (*mockingT) Log(args ...any) { fmt.Println(args...) }
 
 func (m *mockingT) Logf(format string, args ...any) {
 	out := cmp.Or(m.w, io.Writer(os.Stdout))
@@ -79,11 +36,19 @@ func (m *mockingT) Fatalf(format string, args ...any) {
 	m.FailNow()
 }
 
-func (m *mockingT) Fail() { m.setFailed(true) }
+func (m *mockingT) Fail() {
+	m.m.Lock()
+	defer m.m.Unlock()
+	m.hasFailed = true
+}
 
 func (m *mockingT) Errorf(format string, args ...any) {
 	m.Logf(format, args...)
-	m.setFailed(true)
+	m.Fail()
 }
 
-func (m *mockingT) Failed() bool { return m.failed() || m.failedNow() }
+func (m *mockingT) Failed() bool {
+	m.m.Lock()
+	defer m.m.Unlock()
+	return m.hasFailed
+}

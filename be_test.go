@@ -52,7 +52,9 @@ func Test(t *testing.T) {
 		func(be assert.Tester) { be.Nonzero(time.Time{}.Local()) },
 		func(be assert.Tester) { be.Zero([]string{""}) },
 		func(be assert.Tester) { be.Nonzero([]string(nil)) },
-		func(be assert.Tester) { be.OK(func() (int, error) { return 0, errors.New("") }()) },
+		func(be assert.Tester) {
+			be.OK(func() (int, error) { return 0, errors.New("") }())
+		},
 		func(be assert.Tester) { be.True(false) },
 		func(be assert.Tester) { be.False(true) },
 		func(be assert.Tester) {
@@ -73,13 +75,19 @@ func Test(t *testing.T) {
 			close(ch)
 			be.EqualLength(ch, 1)
 		},
+		func(be assert.Tester) {
+			be.Panicked(func() {})
+		},
+		func(be assert.Tester) {
+			be.Type[string](nil)
+		},
 	}
 
 	for _, test := range badTests {
 		var buf strings.Builder
 		m := &mockingT{w: &buf}
-		test(assert.Relaxed(m))
-		if !m.Failed() {
+		test(assert.Strict(m))
+		if !m.hasFailedNow {
 			t.Fatal("did not fail")
 		}
 		if buf.String() == "" {

@@ -18,6 +18,8 @@ func TestMatch(t *testing.T) {
 	pval := assert.Catch(func() {
 		be.Match("", `\`)
 	})
-	s := be.Type[string](pval)
-	be.Match(s, `^regexp: Compile\(`)
+	s, ok := pval.(string)
+	be.
+		True(ok).
+		Match(s, `^regexp: Compile\(`)
 }

@@ -78,9 +78,6 @@ func Test(t *testing.T) {
 		func(be assert.Tester) {
 			be.Panicked(func() {})
 		},
-		func(be assert.Tester) {
-			be.Type[string](nil)
-		},
 	}
 
 	for _, test := range badTests {

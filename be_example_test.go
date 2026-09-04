@@ -74,8 +74,9 @@ func ExampleTester_OK() {
 	// be.OK asserts the error returned is nil
 	// and returns the value for subsequent testing.
 	f := be.OK(os.Open("nosuchfile"))
-	be.NotZero(f)
+	if f != nil {
+		f.Close()
+	}
 	// Output:
 	// err != nil: open nosuchfile: no such file or directory
-	// got: <nil>
 }

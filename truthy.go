@@ -23,8 +23,8 @@ func (be Tester) NotZero[T any](value T) Tester {
 // Truthy returns
 //
 //   - !v.IsZero(), for types with an IsZero() method.
-//   - len(v) == 0, for slices and maps.
-//   - v == the zero value of T, for all other types.
+//   - len(v) != 0, for slices and maps.
+//   - v != the zero value of T, for all other types.
 func Truthy[T any](v T) bool {
 	switch m := any(v).(type) {
 	case interface{ IsZero() bool }:

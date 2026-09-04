@@ -9,7 +9,7 @@ import (
 )
 
 func Example() {
-	be := assert.Relaxed(&mockingT{})
+	be := assert.Continue(&mockingT{})
 
 	be.
 		Equal("hello", "world").    // bad
@@ -69,7 +69,7 @@ func Example() {
 }
 
 func ExampleTester_OK() {
-	be := assert.Relaxed(&mockingT{})
+	be := assert.Continue(&mockingT{})
 
 	// be.OK asserts the error returned is nil
 	// and returns the value for subsequent testing.

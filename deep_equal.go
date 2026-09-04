@@ -6,7 +6,7 @@ import (
 
 // DeepEqual asserts got is [reflect.DeepEqual] to want.
 //
-// Prefer to use [SlicesEqual] if possible.
+// Prefer to use [Tester.SlicesEqual] if possible.
 func (be Tester) DeepEqual[T any](got, want T) Tester {
 	be.tb.Helper()
 	// Pass as pointers to get around the nil-interface problem

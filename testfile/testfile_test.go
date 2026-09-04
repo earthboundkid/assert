@@ -28,7 +28,7 @@ func TestRun(t *testing.T) {
 	}
 	for _, tc := range cases {
 		got := runPaths(t, tc.InPath)
-		assert.Relaxed(t).Equal(strings.Join(got, ","), tc.WantFound)
+		assert.Continue(t).Equal(strings.Join(got, ","), tc.WantFound)
 	}
 }
 
@@ -97,13 +97,13 @@ func TestCases(t *testing.T) {
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			assert.Relaxed(t).Equal(runTest(tc.f), tc.want)
+			assert.Continue(t).Equal(runTest(tc.f), tc.want)
 		})
 	}
 }
 
 func TestSetEnv(t *testing.T) {
-	be := assert.Strict(t)
+	be := assert.FailNow(t)
 	dir := t.TempDir()
 	path := filepath.Join(dir, "example.txt")
 	failedPath := filepath.Join(dir, "-failed-example.txt")

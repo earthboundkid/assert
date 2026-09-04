@@ -5,8 +5,7 @@ import (
 )
 
 func ExampleTester_Panicked() {
-	// mock *testing.T for example purposes
-	be := assert.Relaxed(&mockingT{})
+	be := assert.Continue(&mockingT{})
 
 	divide := func(num, denom int) int {
 		return num / denom

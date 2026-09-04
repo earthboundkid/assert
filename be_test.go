@@ -38,7 +38,7 @@ func Test(t *testing.T) {
 	for _, test := range okayTests {
 		var buf strings.Builder
 		m := &mockingT{w: &buf}
-		test(assert.Relaxed(m))
+		test(assert.Continue(m))
 		if m.Failed() {
 			t.Fatal("failed too soon")
 		}
@@ -83,7 +83,7 @@ func Test(t *testing.T) {
 	for _, test := range badTests {
 		var buf strings.Builder
 		m := &mockingT{w: &buf}
-		test(assert.Strict(m))
+		test(assert.FailNow(m))
 		if !m.hasFailedNow {
 			t.Fatal("did not fail")
 		}

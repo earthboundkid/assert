@@ -17,16 +17,16 @@ func (be Tester) OK[T any](value T, err error) T {
 	return value
 }
 
-// ErrorIs asserts that got [errors.Is] want.
-func (be Tester) ErrorIs(got, want error) Tester {
+// ErrorIs asserts that got [errors.Is] target.
+func (be Tester) ErrorIs(got, target error) Tester {
 	be.tb.Helper()
-	if !errors.Is(got, want) {
-		be.fatalf("got errors.Is(%v, %v) == false", got, want)
+	if !errors.Is(got, target) {
+		be.fatalf("got errors.Is(%v, %v) == false", got, target)
 	}
 	return be
 }
 
-// ErrorAsType asserts [errors.AsType] can unwrap got as T.
+// ErrorAsType asserts that [errors.AsType] can unwrap got as T.
 func (be Tester) ErrorAsType[T error](got error) T {
 	be.tb.Helper()
 	err, ok := errors.AsType[T](got)

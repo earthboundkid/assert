@@ -9,19 +9,20 @@ import (
 // and adds methods for doing assertion tests against
 // that test manager.
 //
-// The methods of testing.TB that Tester uses are Helper, Logf, and FailNow (for [Strict]) or Fail (for [Relaxed]).
+// The methods of testing.TB that Tester uses are Helper, Logf, and FailNow (for [FailNow]) or Fail (for [Continue]).
 type Tester struct {
 	tb      testing.TB
 	relaxed bool
 }
 
-// Strict returns a Tester will end the test after an assertion failure with t.FailNow().
-func Strict(t testing.TB) Tester {
+// FailNow returns a Tester will end the test after an assertion failure with [*testing.T.FailNow].
+func FailNow(t testing.TB) Tester {
 	return Tester{t, false}
 }
 
-// Relaxed returns a Tester will continue testing even after an assertion failure.
-func Relaxed(t testing.TB) Tester {
+// Continue returns a Tester will continue testing even after an assertion failure.
+// It calls [*testing.T.Fail].
+func Continue(t testing.TB) Tester {
 	return Tester{t, true}
 }
 

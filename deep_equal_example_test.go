@@ -5,8 +5,7 @@ import (
 )
 
 func ExampleTester_DeepEqual() {
-	// mock *testing.T for example purposes
-	be := assert.Relaxed(&mockingT{})
+	be := assert.Continue(&mockingT{})
 
 	// good
 	m1 := map[int]bool{1: true, 2: false}

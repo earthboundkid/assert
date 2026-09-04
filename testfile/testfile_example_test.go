@@ -11,7 +11,7 @@ import (
 
 func Example() {
 	t := &testing.T{}
-	be := assert.Relaxed(t)
+	be := assert.Continue(t)
 
 	// Make some test data
 	input := "Hello, World!"

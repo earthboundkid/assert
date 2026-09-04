@@ -5,7 +5,8 @@ import (
 	"slices"
 )
 
-// EqualLength calls t.Fatalf if seq has a length that is not exactly want.
+// EqualLength asserts that seq has a length that is exactly want.
+//
 // The type of seq must be array, array pointer, slice, map, string, channel, [iter.Seq], or [iter.Seq2].
 // For channels and iterators, the values are consumed to get the sequence length.
 func (be Tester) EqualLength(seq any, want int) Tester {
@@ -67,7 +68,8 @@ func getLen(be Tester, seq any, want int, exactly bool) {
 	}
 }
 
-// AtLeastLength calls t.Fatalf if seq has a length that is not at least want.
+// AtLeastLength asserts that seq has a length that is at least want.
+//
 // The type of seq must be array, array pointer, slice, map, string, channel, [iter.Seq], or [iter.Seq2].
 // For channels and iterators, the values are consumed to get the sequence length.
 func (be Tester) AtLeastLength(seq any, want int) Tester {

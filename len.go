@@ -3,7 +3,6 @@ package assert
 import (
 	"reflect"
 	"slices"
-	"testing"
 )
 
 // EqualLength calls t.Fatalf if seq has a length that is not exactly want.
@@ -11,11 +10,11 @@ import (
 // For channels and iterators, the values are consumed to get the sequence length.
 func (be Tester) EqualLength(seq any, want int) Tester {
 	be.tb.Helper()
-	getLen(be.tb, seq, want, true)
+	getLen(be, seq, want, true)
 	return be
 }
 
-func getLen(t testing.TB, seq any, want int, exactly bool) {
+func getLen(be Tester, seq any, want int, exactly bool) {
 	rv := reflect.ValueOf(seq)
 	rt := rv.Type()
 	kind := rt.Kind()
@@ -60,11 +59,11 @@ func getLen(t testing.TB, seq any, want int, exactly bool) {
 
 	switch {
 	case !exactly && want > got:
-		t.Fatalf("want len(seq) >= %d; got %d", want, got)
+		be.fatalf("want len(seq) >= %d; got %d", want, got)
 	case exactly && want > got:
-		t.Fatalf("want len(seq) == %d; got %d", want, got)
+		be.fatalf("want len(seq) == %d; got %d", want, got)
 	case exactly && want < got:
-		t.Fatalf("want len(seq) == %d; got %s%d", want, atLeast, got)
+		be.fatalf("want len(seq) == %d; got %s%d", want, atLeast, got)
 	}
 }
 
@@ -73,6 +72,6 @@ func getLen(t testing.TB, seq any, want int, exactly bool) {
 // For channels and iterators, the values are consumed to get the sequence length.
 func (be Tester) AtLeastLength(seq any, want int) Tester {
 	be.tb.Helper()
-	getLen(be.tb, seq, want, false)
+	getLen(be, seq, want, false)
 	return be
 }

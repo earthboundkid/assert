@@ -39,10 +39,11 @@ func Example() {
 
 	type mytype string
 	var mystring mytype = "hello, world"
-	be.Match(mystring, `world`)                  // good
-	be.Match(mystring, `World`)                  // bad
-	be.Match([]byte("\a\b\x00\r\t"), `^\W*$`)    // good
-	be.NotMatch([]byte("\a\b\x00\r\t"), `^\W*$`) // bad
+	be.
+		Match(mystring, `world`).                 // good
+		Match(mystring, `World`).                 // bad
+		Match([]byte("\a\b\x00\r\t"), `^\W*$`).   // good
+		NotMatch([]byte("\a\b\x00\r\t"), `^\W*$`) // bad
 
 	seq := strings.FieldsSeq("1 2 3 4")
 	be.

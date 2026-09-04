@@ -14,7 +14,7 @@ func (be Tester) ErrorIs(got, want error) Tester {
 }
 
 // ErrorAs calls t.Fatalf if got cannot be assigned to want by [errors.As].
-func (be Tester) ErrorAsType[T error](got error) error {
+func (be Tester) ErrorAsType[T error](got error) T {
 	be.tb.Helper()
 	err, ok := errors.AsType[T](got)
 	if !ok {

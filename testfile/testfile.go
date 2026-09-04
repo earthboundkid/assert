@@ -22,33 +22,33 @@ func Ext(path, ext string) string {
 }
 
 // Read returns the contents of file at path.
-// It calls t.Fatalf if there is an error.
+// It calls t.Errorf if there is an error.
 func Read(t testing.TB, path string) string {
 	t.Helper()
 	b, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("%v", err)
+		t.Errorf("%v", err)
 	}
 	return string(b)
 }
 
 // Write the data to a file at path with 0644 permission bits.
 // It attempts to create directories as needed.
-// It calls t.Fatalf if there is an error.
+// It calls t.Errorf if there is an error.
 func Write(t testing.TB, path, data string) {
 	t.Helper()
 	dir := filepath.Dir(path)
 	_ = os.MkdirAll(dir, 0700)
 	err := os.WriteFile(path, []byte(data), 0644)
 	if err != nil {
-		t.Fatalf("%v", err)
+		t.Errorf("%v", err)
 	}
 }
 
 // Equal tests whether gotStr is equal to the contents of wantFile.
 // If they are not equal,
 // it writes gotStr to a file with -failed- prepended to its name
-// and calls t.Fatalf.
+// and calls t.Errorf.
 //
 // If the environmental variable TESTFILE_UPDATE is set,
 // an unequal file will be overwritten with gotStr,
@@ -77,7 +77,7 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 	switch {
 	case err == nil, os.IsNotExist(err):
 	case err != nil:
-		t.Fatalf("%v", err)
+		t.Errorf("%v", err)
 		return
 	}
 	w := string(b)
@@ -100,16 +100,16 @@ func equal(t testing.TB, wantFile, gotStr string, trim bool) {
 		return
 	}
 	Write(t, badFile, gotStr)
-	t.Fatalf("contents of %s != %s", wantFile, badFile)
+	t.Errorf("contents of %s != %s", wantFile, badFile)
 }
 
 // ReadJSON attempts to unmarshal the contents of a file at path into v.
-// If there is an error, it calls t.Fatalf.
+// If there is an error, it calls t.Errorf.
 func ReadJSON(t testing.TB, path string, v any) {
 	t.Helper()
 	s := Read(t, path)
 	if err := json.Unmarshal([]byte(s), v); err != nil {
-		t.Fatalf("unmarshal %s: %v", path, err)
+		t.Errorf("unmarshal %s: %v", path, err)
 	}
 }
 
@@ -119,8 +119,8 @@ func ReadJSON(t testing.TB, path string, v any) {
 // The contents of wantFile must have two spaces for indentation.
 // EqualJSON just uses string equality
 // and does not test for JSON equivalency.
-// If they are not equal, it writes out a file with the contents of v and calls t.Fatalf.
-// If there is an error, it calls t.Fatalf.
+// If they are not equal, it writes out a file with the contents of v and calls t.Errorf.
+// If there is an error, it calls t.Errorf.
 //
 // If the environmental variable TESTFILE_UPDATE is set,
 // an unequal file will be overwritten with v,
@@ -134,7 +134,7 @@ func EqualJSON(t testing.TB, wantFile string, v any) {
 	enc.SetIndent("", "  ")
 	err := enc.Encode(v)
 	if err != nil {
-		t.Fatalf("marshaling: %v", err)
+		t.Errorf("marshaling: %v", err)
 		return
 	}
 	Equalish(t, wantFile, buf.String())
@@ -142,7 +142,7 @@ func EqualJSON(t testing.TB, wantFile string, v any) {
 
 // WriteJSON writes v as JSON to a file at path.
 // The JSON is created using two spaces for indentation.
-// If there is an error, it calls t.Fatalf.
+// If there is an error, it calls t.Errorf.
 func WriteJSON(t testing.TB, path string, v any) {
 	t.Helper()
 	var buf strings.Builder
@@ -151,7 +151,7 @@ func WriteJSON(t testing.TB, path string, v any) {
 	enc.SetIndent("", "  ")
 	err := enc.Encode(v)
 	if err != nil {
-		t.Fatalf("marshaling: %v", err)
+		t.Errorf("marshaling: %v", err)
 		return
 	}
 	Write(t, path, buf.String())
@@ -162,7 +162,7 @@ func Run(t *testing.T, glob string, f func(t *testing.T, match string)) {
 	t.Helper()
 	matches, err := filepath.Glob(glob)
 	if err != nil {
-		t.Fatalf("%v", err)
+		t.Errorf("%v", err)
 		return
 	}
 	for i := range matches {

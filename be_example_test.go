@@ -23,6 +23,9 @@ func Example() {
 		SlicesEqual([]int{1, 2, 3}, s). // good
 		SlicesEqual([]int{3, 2, 1}, s)  // bad
 
+	f := be.OK(os.Open("nosuchfile")) // bad
+	be.Zero(f)                        // good
+
 	var err error
 	be.
 		Zero(err).                     // good
@@ -33,9 +36,6 @@ func Example() {
 	err = errors.New("(O_o)")
 	be.ErrorAsType[*os.PathError](err) // bad
 	be.NotZero(err)                    // good
-
-	f := be.OK(os.Open("nosuchfile")) // bad
-	be.Zero(f)                        // good
 
 	type mytype string
 	var mystring mytype = "hello, world"

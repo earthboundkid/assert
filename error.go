@@ -17,6 +17,28 @@ func (be TB) OK[T any](value T, err error) T {
 	return value
 }
 
+// NotOK asserts that error is not nil the return value is falsey.
+// Typical use is like
+//
+//	err := be.NotOK(canFail())
+//	failure := be.ErrorAsType[FailError](err)
+//	be.Equal(failure.cause, "failed")
+func (be TB) NotOK[T any](value T, err error) error {
+	be.Helper()
+	truthy := Truthy(value)
+	switch {
+	case !truthy && err == nil:
+		be.fatalf("expected zero, err; got zero, nil")
+	case truthy && err == nil:
+		be.fatalf("expected zero, err; got %v, nil", value)
+	case !truthy && err != nil:
+		// OK
+	case truthy && err != nil:
+		be.fatalf("expected zero, err; got %v, %v", value, err)
+	}
+	return err
+}
+
 // OK asserts that error is nil and returns v1 and v2.
 // Typical use is like
 //

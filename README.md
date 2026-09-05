@@ -125,7 +125,7 @@ Tests usually should not fail. When they do fail, the failure should be repeatab
 
 The assertions in package assert are methods of the `assert.TB` type, which captures a `testing.TB` and can either call `testing.TB.Fail` or `testing.TB.FailNow` on failure depending on how you want the assertions to work.
 
-Most tests just need simple equality testing, which is handled by `TB.Equal` (for comparable types), `TB.SlicesEqual` (for slices of comparable types), and `TB.DeepEqual` (which relies on `reflect.DeepEqual`). Another common test is that a string or byte slice should contain or not some substring, which is handled by `TB.Match` and `TB.NotMatch`. Rather than package assert providing every possible test helper, you are encouraged to write your own advanced helpers for use with `TB.True`, while package assert takes away the drudgery of writing yet another simple `func nilErr(t *testing.T, err) { ... }`.
+Most tests just need simple equality testing, which is handled by `TB.Equal` (for comparable types), `TB.SlicesEqual` (for slices of comparable types), and `TB.DeepEqual` (which relies on `reflect.DeepEqual`), and simple `err == nil` checking, which is handled by `TB.OK`. Another common test is that a string or byte slice should contain or not some substring, which is handled by `TB.Match` and `TB.NotMatch`. Rather than package assert providing every possible test helper, you are encouraged to write your own advanced helpers for use with `TB.True`, while package assert takes away the drudgery of writing yet another simple `func nilErr(t *testing.T, err) { ... }`.
 
 To make table based testing easier, `assert.Run` takes a map from name to testcase struct and runs a sub-test for each map entry.
 

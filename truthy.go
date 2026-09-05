@@ -2,24 +2,6 @@ package assert
 
 import "reflect"
 
-// Zero asserts value is not [Truthy].
-func (be Tester) Zero[T any](value T) Tester {
-	be.tb.Helper()
-	if Truthy(value) {
-		be.fatalf("got: %v", value)
-	}
-	return be
-}
-
-// NotZero asserts value is [Truthy].
-func (be Tester) NotZero[T any](value T) Tester {
-	be.tb.Helper()
-	if !Truthy(value) {
-		be.fatalf("got: %v", value)
-	}
-	return be
-}
-
 // Truthy returns
 //
 //   - !v.IsZero(), for types with an IsZero() method.
@@ -31,6 +13,24 @@ func Truthy[T any](v T) bool {
 		return !m.IsZero()
 	}
 	return reflectValue(&v)
+}
+
+// Falsey asserts value is not [Truthy].
+func (be TB) Falsey[T any](value T) TB {
+	be.Helper()
+	if Truthy(value) {
+		be.fatalf("got: %v", value)
+	}
+	return be
+}
+
+// Truthy asserts value is [Truthy].
+func (be TB) Truthy[T any](value T) TB {
+	be.Helper()
+	if !Truthy(value) {
+		be.fatalf("got: %v", value)
+	}
+	return be
 }
 
 func reflectValue(vp any) bool {

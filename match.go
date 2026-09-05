@@ -8,8 +8,8 @@ import (
 // Match asserts got matches the [regexp] pattern.
 //
 // The pattern must compile.
-func (be Tester) Match[byteseq ~string | ~[]byte](got byteseq, pattern string) Tester {
-	be.tb.Helper()
+func (be TB) Match[byteseq ~string | ~[]byte](got byteseq, pattern string) TB {
+	be.Helper()
 	reg := regexp.MustCompile(pattern)
 	if !match(reg, got) {
 		be.fatalf("missing match: /%s/ !~ %q", pattern, got)
@@ -20,8 +20,8 @@ func (be Tester) Match[byteseq ~string | ~[]byte](got byteseq, pattern string) T
 // NotMatch asserts got does not matches the [regexp] pattern.
 //
 // The pattern must compile.
-func (be Tester) NotMatch[byteseq ~string | ~[]byte](got byteseq, pattern string) Tester {
-	be.tb.Helper()
+func (be TB) NotMatch[byteseq ~string | ~[]byte](got byteseq, pattern string) TB {
+	be.Helper()
 	reg := regexp.MustCompile(pattern)
 	if match(reg, got) {
 		be.fatalf("unexpected match: /%s/ =~ %q", pattern, got)

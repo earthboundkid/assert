@@ -7,13 +7,13 @@ import (
 )
 
 func TestLen(t *testing.T) {
-	be := assert.FailNow(t)
+	be := assert.FailsNow(t)
 	// Make sure integers aren't treated as rangeable
 	be.Panicked(func() { be.EqualLength(0, 0) })
 }
 
 func TestMatch(t *testing.T) {
-	be := assert.FailNow(t)
+	be := assert.FailsNow(t)
 	// Make sure bad regexp patterns panic
 	pval := assert.Catch(func() {
 		be.Match("", `\`)

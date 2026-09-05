@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/earthboundkid/assert"
 )
 
 // Ext return path with its current extension stripped and ext added.
@@ -158,7 +160,8 @@ func WriteJSON(t testing.TB, path string, v any) {
 }
 
 // Run a subtest for each file matching the provided glob pattern.
-func Run(t *testing.T, glob string, f func(t *testing.T, match string)) {
+// The [assert.TB] is [FailsNow] by default.
+func Run(t *testing.T, glob string, f func(be assert.TB, match string)) {
 	t.Helper()
 	matches, err := filepath.Glob(glob)
 	if err != nil {
@@ -169,7 +172,7 @@ func Run(t *testing.T, glob string, f func(t *testing.T, match string)) {
 		match := matches[i]
 		name := filepath.Base(match)
 		t.Run(name, func(t *testing.T) {
-			f(t, match)
+			f(assert.FailsNow(t), match)
 		})
 	}
 }

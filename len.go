@@ -9,13 +9,13 @@ import (
 //
 // The type of seq must be array, array pointer, slice, map, string, channel, [iter.Seq], or [iter.Seq2].
 // For channels and iterators, the values are consumed to get the sequence length.
-func (be Tester) EqualLength(seq any, want int) Tester {
-	be.tb.Helper()
+func (be TB) EqualLength(seq any, want int) TB {
+	be.Helper()
 	getLen(be, seq, want, true)
 	return be
 }
 
-func getLen(be Tester, seq any, want int, exactly bool) {
+func getLen(be TB, seq any, want int, exactly bool) {
 	rv := reflect.ValueOf(seq)
 	rt := rv.Type()
 	kind := rt.Kind()
@@ -72,8 +72,8 @@ func getLen(be Tester, seq any, want int, exactly bool) {
 //
 // The type of seq must be array, array pointer, slice, map, string, channel, [iter.Seq], or [iter.Seq2].
 // For channels and iterators, the values are consumed to get the sequence length.
-func (be Tester) AtLeastLength(seq any, want int) Tester {
-	be.tb.Helper()
+func (be TB) AtLeastLength(seq any, want int) TB {
+	be.Helper()
 	getLen(be, seq, want, false)
 	return be
 }

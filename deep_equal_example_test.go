@@ -4,8 +4,8 @@ import (
 	"github.com/earthboundkid/assert"
 )
 
-func ExampleTester_DeepEqual() {
-	be := assert.Continue(&mockingT{})
+func ExampleTB_DeepEqual() {
+	be := assert.Continues(&mockingT{})
 
 	// good
 	m1 := map[int]bool{1: true, 2: false}

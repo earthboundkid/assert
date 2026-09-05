@@ -92,3 +92,11 @@ func Test(t *testing.T) {
 		}
 	}
 }
+
+func TestTester_TB(t *testing.T) {
+	var buf strings.Builder
+	m := &mockingT{w: &buf}
+	be := assert.Continue(m)
+	be.TB().Logf("hi")
+	assert.FailNow(t).Equal(buf.String(), "hi\n")
+}

@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// Tester is a type that wraps a [*testing.T] or [*testing.B]
+// Tester is a type that wraps a [*testing.T], [*testing.B], or [*testing.F]
 // and adds methods for doing assertion tests against
 // that test manager.
 //
@@ -24,6 +24,12 @@ func FailNow(t testing.TB) Tester {
 // It calls [*testing.T.Fail].
 func Continue(t testing.TB) Tester {
 	return Tester{t, true}
+}
+
+// TB returns the testing.TB the Tester wraps.
+// Mostly useful with [RunAll] to access logging.
+func (be Tester) TB() testing.TB {
+	return be.tb
 }
 
 func (be Tester) fatalf(format string, args ...any) {

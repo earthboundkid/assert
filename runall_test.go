@@ -8,11 +8,11 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	// TestCapitalize
 	// Keep in-sync with runall_example_test.go
 	type testcase struct {
 		in, want string
 	}
-	// TestCapitalize
 	assert.Run(t, map[string]testcase{
 		"blank":            {in: "", want: ""},
 		"a":                {in: "a", want: "A"},

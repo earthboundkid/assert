@@ -24,11 +24,11 @@ func Example() {
 		SlicesEqual([]int{3, 2, 1}, s)  // bad
 
 	f := be.OK(os.Open("nosuchfile")) // bad
-	be.Zero(f)                        // good
+	be.Falsey(f)                      // good
 
 	var err error
 	be.
-		Zero(err).                     // good
+		Falsey(err).                   // good
 		ErrorIs(nil, err).             // good
 		Truthy(err).                   // bad
 		ErrorIs(err, os.ErrPermission) // bad

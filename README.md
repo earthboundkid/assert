@@ -56,17 +56,17 @@ Handle errors:
 
 ```go
 f := be.OK(os.Open("nosuchfile")) // bad, and also returns nil *os.File
-be.Zero(f)                        // good
+be.Falsey(f)                      // good
 
 var err error
-be.Zero(err)                      // good
+be.Falsey(err)                     // good
 be.ErrorIs(nil, err)              // good
-be.NotZero(err)                   // bad
+be.Truthy(err)                    // bad
 be.ErrorIs(err, os.ErrPermission) // bad
 
 err = errors.New("(O_o)")
 be.ErrorAsType[*os.PathError](err) // bad
-be.NotZero(err)                    // good
+be.Truthy(err)                     // good
 
 ```
 
@@ -102,7 +102,7 @@ Test using goldenfiles:
 
 ```go
 // Start a sub-test for each .txt file
-testfile.Run(t, "testdata/*.txt", func(t *testing.T, path string) {
+testfile.Run(t, "testdata/*.txt", func(t assert.TB, path string) {
 	// Read the file
 	input := testfile.Read(t, path)
 

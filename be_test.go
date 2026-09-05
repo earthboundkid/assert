@@ -100,3 +100,39 @@ func TestTester_TB(t *testing.T) {
 	be.TB().Logf("hi")
 	assert.FailNow(t).Equal(buf.String(), "hi\n")
 }
+
+func TestContinue(t *testing.T) {
+	// Make sure Continue and FailNow work as both functions and methods
+	{
+		m := &mockingT{}
+		be := assert.Continue(m)
+		be.Equal(1, 0)
+		assert.Continue(t).
+			True(m.hasFailed).
+			False(m.hasFailedNow)
+	}
+	{
+		m := &mockingT{}
+		be := assert.Continue(m).FailNow()
+		be.Equal(1, 0)
+		assert.Continue(t).
+			True(m.hasFailed).
+			True(m.hasFailedNow)
+	}
+	{
+		m := &mockingT{}
+		be := assert.FailNow(m)
+		be.Equal(1, 0)
+		assert.Continue(t).
+			True(m.hasFailed).
+			True(m.hasFailedNow)
+	}
+	{
+		m := &mockingT{}
+		be := assert.FailNow(m).Continue()
+		be.Equal(1, 0)
+		assert.Continue(t).
+			True(m.hasFailed).
+			False(m.hasFailedNow)
+	}
+}

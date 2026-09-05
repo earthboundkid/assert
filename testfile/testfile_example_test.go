@@ -47,7 +47,7 @@ func Example() {
 func ExampleRun() {
 	_ = func(t *testing.T) {
 		// For each .txt file, start a sub-test
-		testfile.Run(t, "testdata/*.txt", func(t *testing.T, path string) {
+		testfile.Run(t, "testdata/*.txt", func(be assert.Tester, path string) {
 			// Read the file
 			input := testfile.Read(t, path)
 

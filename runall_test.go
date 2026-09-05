@@ -7,13 +7,13 @@ import (
 	"github.com/earthboundkid/assert"
 )
 
-func TestRunAll(t *testing.T) {
+func TestRun(t *testing.T) {
 	// Keep in-sync with runall_example_test.go
 	type testcase struct {
 		in, want string
 	}
 	// TestCapitalize
-	assert.RunAll(t, map[string]testcase{
+	assert.Run(t, map[string]testcase{
 		"blank":            {in: "", want: ""},
 		"a":                {in: "a", want: "A"},
 		"already upper":    {in: "A", want: "A"},

@@ -7,13 +7,13 @@ import (
 	"github.com/earthboundkid/assert"
 )
 
-func ExampleRunAll() {
+func ExampleRun() {
 	_ = func(t *testing.T) {
 		type testcase struct {
 			in, want string
 		}
 		// TestCapitalize
-		assert.RunAll(t, map[string]testcase{
+		assert.Run(t, map[string]testcase{
 			"blank":            {in: "", want: ""},
 			"a":                {in: "a", want: "A"},
 			"already upper":    {in: "A", want: "A"},

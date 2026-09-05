@@ -12,7 +12,7 @@ import (
 
 func runPaths(t *testing.T, inpath string) []string {
 	var paths []string
-	testfile.Run(t, inpath, func(t *testing.T, path string) {
+	testfile.Run(t, inpath, func(be assert.Tester, path string) {
 		paths = append(paths, path)
 	})
 	return paths
@@ -92,7 +92,7 @@ func TestCases(t *testing.T) {
 			testfile.WriteJSON(t, join("out.txt"), 1.0)
 		}},
 		{"bad Run glob", false, func(t *testing.T) {
-			testfile.Run(t, "[]", func(t *testing.T, match string) {})
+			testfile.Run(t, "[]", func(be assert.Tester, match string) {})
 		}},
 	}
 	for _, tc := range cases {

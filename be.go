@@ -20,14 +20,27 @@ func FailNow(t testing.TB) Tester {
 	return Tester{t, false}
 }
 
+// FailNow returns a copy of the Tester
+// that will end the test after an assertion failure with [*testing.T.FailNow].
+func (be Tester) FailNow() Tester {
+	return Tester{be.tb, false}
+}
+
 // Continue returns a Tester will continue testing even after an assertion failure.
 // It calls [*testing.T.Fail].
 func Continue(t testing.TB) Tester {
 	return Tester{t, true}
 }
 
+// Continue returns a copy of the Tester
+// that will continue testing even after an assertion failure.
+// It calls [*testing.T.Fail].
+func (be Tester) Continue() Tester {
+	return Tester{be.tb, true}
+}
+
 // TB returns the testing.TB the Tester wraps.
-// Mostly useful with [RunAll] to access logging.
+// Mostly useful with [Run] to access logging.
 func (be Tester) TB() testing.TB {
 	return be.tb
 }

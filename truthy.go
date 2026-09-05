@@ -3,8 +3,8 @@ package assert
 import "reflect"
 
 // Zero asserts value is not [Truthy].
-func (be Tester) Zero[T any](value T) Tester {
-	be.tb.Helper()
+func (be TB) Zero[T any](value T) TB {
+	be.Helper()
 	if Truthy(value) {
 		be.fatalf("got: %v", value)
 	}
@@ -12,8 +12,8 @@ func (be Tester) Zero[T any](value T) Tester {
 }
 
 // NotZero asserts value is [Truthy].
-func (be Tester) NotZero[T any](value T) Tester {
-	be.tb.Helper()
+func (be TB) NotZero[T any](value T) TB {
+	be.Helper()
 	if !Truthy(value) {
 		be.fatalf("got: %v", value)
 	}

@@ -4,8 +4,8 @@ import (
 	"github.com/earthboundkid/assert"
 )
 
-func ExampleTester_Panicked() {
-	be := assert.Continue(&mockingT{})
+func ExampleTB_Panicked() {
+	be := assert.Continues(&mockingT{})
 
 	divide := func(num, denom int) int {
 		return num / denom

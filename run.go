@@ -6,13 +6,13 @@ import (
 	"testing"
 )
 
-// Run runs all the test cases in the map with t.Run using the key as the name.
-// The Tester associated with the sub-test is FailNow by default.
-func Run[Testcase any](t *testing.T, m map[string]Testcase, f func(be Tester, tc Testcase)) {
+// Run runs all the test cases in the map with [*testing.Run] using map keys as sub-test names.
+// The [TB] associated with the sub-test is [FailsNow] by default.
+func Run[Testcase any](t *testing.T, m map[string]Testcase, f func(be TB, tc Testcase)) {
 	t.Helper()
 
 	names := slices.Sorted(maps.Keys(m))
 	for _, name := range names {
-		t.Run(name, func(t *testing.T) { f(FailNow(t), m[name]) })
+		t.Run(name, func(t *testing.T) { f(FailsNow(t), m[name]) })
 	}
 }

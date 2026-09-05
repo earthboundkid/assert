@@ -9,7 +9,7 @@ import (
 )
 
 func Example() {
-	be := assert.Continue(&mockingT{})
+	be := assert.Continues(&mockingT{})
 
 	be.
 		Equal("hello", "world").    // bad
@@ -69,8 +69,8 @@ func Example() {
 	// want len(seq) >= 4; got 3
 }
 
-func ExampleTester_OK() {
-	be := assert.Continue(&mockingT{})
+func ExampleTB_OK() {
+	be := assert.Continues(&mockingT{})
 
 	// be.OK asserts the error returned is nil
 	// and returns the value for subsequent testing.

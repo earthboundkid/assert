@@ -11,25 +11,25 @@ import (
 )
 
 func Test(t *testing.T) {
-	okayTests := []func(be assert.Tester){
-		func(be assert.Tester) { be.Zero(time.Time{}.Local()) },
-		func(be assert.Tester) { be.Zero([]string(nil)) },
-		func(be assert.Tester) { be.NotZero([]string{""}) },
-		func(be assert.Tester) { _ = be.OK(func() (int, error) { return 1, nil }()) },
-		func(be assert.Tester) { be.True(true) },
-		func(be assert.Tester) { be.False(false) },
-		func(be assert.Tester) { be.EqualLength(map[int]int{}, 0) },
-		func(be assert.Tester) { be.EqualLength(map[int]int{1: 1}, 1) },
-		func(be assert.Tester) {
+	okayTests := []func(be assert.TB){
+		func(be assert.TB) { be.Zero(time.Time{}.Local()) },
+		func(be assert.TB) { be.Zero([]string(nil)) },
+		func(be assert.TB) { be.NotZero([]string{""}) },
+		func(be assert.TB) { _ = be.OK(func() (int, error) { return 1, nil }()) },
+		func(be assert.TB) { be.True(true) },
+		func(be assert.TB) { be.False(false) },
+		func(be assert.TB) { be.EqualLength(map[int]int{}, 0) },
+		func(be assert.TB) { be.EqualLength(map[int]int{1: 1}, 1) },
+		func(be assert.TB) {
 			ch := make(chan int, 1)
 			be.EqualLength(ch, 0)
 		},
-		func(be assert.Tester) {
+		func(be assert.TB) {
 			ch := make(chan int, 1)
 			ch <- 1
 			be.EqualLength(ch, 1)
 		},
-		func(be assert.Tester) {
+		func(be assert.TB) {
 			seq2 := maps.All(map[int]int{1: 1})
 			be.EqualLength(seq2, 1)
 		},
@@ -38,7 +38,7 @@ func Test(t *testing.T) {
 	for _, test := range okayTests {
 		var buf strings.Builder
 		m := &mockingT{w: &buf}
-		test(assert.Continue(m))
+		test(assert.Continues(m))
 		if m.Failed() {
 			t.Fatal("failed too soon")
 		}
@@ -47,35 +47,35 @@ func Test(t *testing.T) {
 		}
 	}
 
-	badTests := []func(be assert.Tester){
-		func(be assert.Tester) { be.SlicesEqual([]string{}, []string{""}) },
-		func(be assert.Tester) { be.NotZero(time.Time{}.Local()) },
-		func(be assert.Tester) { be.Zero([]string{""}) },
-		func(be assert.Tester) { be.NotZero([]string(nil)) },
-		func(be assert.Tester) {
+	badTests := []func(be assert.TB){
+		func(be assert.TB) { be.SlicesEqual([]string{}, []string{""}) },
+		func(be assert.TB) { be.NotZero(time.Time{}.Local()) },
+		func(be assert.TB) { be.Zero([]string{""}) },
+		func(be assert.TB) { be.NotZero([]string(nil)) },
+		func(be assert.TB) {
 			be.OK(func() (int, error) { return 0, errors.New("") }())
 		},
-		func(be assert.Tester) { be.True(false) },
-		func(be assert.Tester) { be.False(true) },
-		func(be assert.Tester) {
+		func(be assert.TB) { be.True(false) },
+		func(be assert.TB) { be.False(true) },
+		func(be assert.TB) {
 			seq2 := maps.All(map[int]int{1: 1})
 			be.EqualLength(seq2, 0)
 		},
-		func(be assert.Tester) {
+		func(be assert.TB) {
 			ch := make(chan int, 1)
 			be.EqualLength(ch, 1)
 		},
-		func(be assert.Tester) {
+		func(be assert.TB) {
 			ch := make(chan int, 1)
 			ch <- 1
 			be.EqualLength(ch, 0)
 		},
-		func(be assert.Tester) {
+		func(be assert.TB) {
 			ch := make(chan int, 1)
 			close(ch)
 			be.EqualLength(ch, 1)
 		},
-		func(be assert.Tester) {
+		func(be assert.TB) {
 			be.Panicked(func() {})
 		},
 	}
@@ -83,7 +83,7 @@ func Test(t *testing.T) {
 	for _, test := range badTests {
 		var buf strings.Builder
 		m := &mockingT{w: &buf}
-		test(assert.FailNow(m))
+		test(assert.FailsNow(m))
 		if !m.hasFailedNow {
 			t.Fatal("did not fail")
 		}
@@ -93,45 +93,45 @@ func Test(t *testing.T) {
 	}
 }
 
-func TestTester_TB(t *testing.T) {
+func TestTB_Logf(t *testing.T) {
 	var buf strings.Builder
 	m := &mockingT{w: &buf}
-	be := assert.Continue(m)
-	be.TB().Logf("hi")
-	assert.FailNow(t).Equal(buf.String(), "hi\n")
+	be := assert.Continues(m)
+	be.Logf("hi")
+	assert.FailsNow(t).Equal(buf.String(), "hi\n")
 }
 
-func TestContinue(t *testing.T) {
-	// Make sure Continue and FailNow work as both functions and methods
+func TestContinues(t *testing.T) {
+	// Make sure Continues and FailNows work as both functions and methods
 	{
 		m := &mockingT{}
-		be := assert.Continue(m)
+		be := assert.Continues(m)
 		be.Equal(1, 0)
-		assert.Continue(t).
+		assert.Continues(t).
 			True(m.hasFailed).
 			False(m.hasFailedNow)
 	}
 	{
 		m := &mockingT{}
-		be := assert.Continue(m).FailNow()
+		be := assert.Continues(m).FailsNow()
 		be.Equal(1, 0)
-		assert.Continue(t).
+		assert.Continues(t).
 			True(m.hasFailed).
 			True(m.hasFailedNow)
 	}
 	{
 		m := &mockingT{}
-		be := assert.FailNow(m)
+		be := assert.FailsNow(m)
 		be.Equal(1, 0)
-		assert.Continue(t).
+		assert.Continues(t).
 			True(m.hasFailed).
 			True(m.hasFailedNow)
 	}
 	{
 		m := &mockingT{}
-		be := assert.FailNow(m).Continue()
+		be := assert.FailsNow(m).Continues()
 		be.Equal(1, 0)
-		assert.Continue(t).
+		assert.Continues(t).
 			True(m.hasFailed).
 			False(m.hasFailedNow)
 	}

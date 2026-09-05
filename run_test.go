@@ -19,7 +19,7 @@ func TestRun(t *testing.T) {
 		"already upper":    {in: "A", want: "A"},
 		"multi character":  {in: "Abc", want: "ABC"},
 		"other characters": {in: " a,.c", want: " A,.C"},
-	}, func(be assert.Tester, tc testcase) {
+	}, func(be assert.TB, tc testcase) {
 		be.Equal(strings.ToUpper(tc.in), tc.want)
 	})
 }

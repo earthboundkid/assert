@@ -12,7 +12,7 @@ import (
 
 func runPaths(t *testing.T, inpath string) []string {
 	var paths []string
-	testfile.Run(t, inpath, func(be assert.Tester, path string) {
+	testfile.Run(t, inpath, func(be assert.TB, path string) {
 		paths = append(paths, path)
 	})
 	return paths
@@ -28,7 +28,7 @@ func TestRun(t *testing.T) {
 	}
 	for _, tc := range cases {
 		got := runPaths(t, tc.InPath)
-		assert.Continue(t).Equal(strings.Join(got, ","), tc.WantFound)
+		assert.Continues(t).Equal(strings.Join(got, ","), tc.WantFound)
 	}
 }
 
@@ -92,18 +92,18 @@ func TestCases(t *testing.T) {
 			testfile.WriteJSON(t, join("out.txt"), 1.0)
 		}},
 		{"bad Run glob", false, func(t *testing.T) {
-			testfile.Run(t, "[]", func(be assert.Tester, match string) {})
+			testfile.Run(t, "[]", func(be assert.TB, match string) {})
 		}},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			assert.Continue(t).Equal(runTest(tc.f), tc.want)
+			assert.Continues(t).Equal(runTest(tc.f), tc.want)
 		})
 	}
 }
 
 func TestSetEnv(t *testing.T) {
-	be := assert.FailNow(t)
+	be := assert.FailsNow(t)
 	dir := t.TempDir()
 	path := filepath.Join(dir, "example.txt")
 	failedPath := filepath.Join(dir, "-failed-example.txt")

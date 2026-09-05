@@ -10,8 +10,8 @@ func Catch(fn func()) (r any) {
 }
 
 // Panicked asserts that fn panics when run.
-func (be Tester) Panicked(fn func()) Tester {
-	be.tb.Helper()
+func (be TB) Panicked(fn func()) TB {
+	be.Helper()
 	if pval := Catch(fn); pval == nil {
 		be.fatalf("expected panic; got nil")
 	}

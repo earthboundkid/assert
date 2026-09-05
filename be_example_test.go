@@ -30,12 +30,12 @@ func Example() {
 	be.
 		Zero(err).                     // good
 		ErrorIs(nil, err).             // good
-		NotZero(err).                  // bad
+		Truthy(err).                   // bad
 		ErrorIs(err, os.ErrPermission) // bad
 
 	err = errors.New("(O_o)")
 	be.ErrorAsType[*os.PathError](err) // bad
-	be.NotZero(err)                    // good
+	be.Truthy(err)                     // good
 
 	type mytype string
 	var mystring mytype = "hello, world"

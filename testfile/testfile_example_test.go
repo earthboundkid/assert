@@ -10,20 +10,19 @@ import (
 )
 
 func Example() {
-	t := &testing.T{}
-	be := assert.Continues(t)
+	be := assert.Continues(new(testing.T))
 
 	// Make some test data
 	input := "Hello, World!"
 	got := strings.ToUpper(input)
 	// Write files
-	testfile.Write(t, "example/upper.txt", got)
+	testfile.Write(be, "example/upper.txt", got)
 	// Read files
-	file := testfile.Read(t, "example/upper.txt")
+	file := testfile.Read(be, "example/upper.txt")
 	// Do some testing
 	be.Equal(got, file)
 	// Use the equality helper
-	testfile.Equal(t, "example/upper.txt", got)
+	testfile.Equal(be, "example/upper.txt", got)
 	// If the files aren't equal,
 	// got will be written to example/-failed-upper.txt
 
@@ -33,13 +32,13 @@ func Example() {
 	}
 	s := testcase{input, got}
 	// Write out pretty printed JSON
-	testfile.WriteJSON(t, "example/upper.json", s)
+	testfile.WriteJSON(be, "example/upper.json", s)
 	// Read from a JSON file
 	var s2 testcase
-	testfile.ReadJSON(t, "example/upper.json", &s2)
+	testfile.ReadJSON(be, "example/upper.json", &s2)
 	be.Equal(s, s2)
 	// Test that s equals the contents of a file when serialized
-	testfile.EqualJSON(t, "example/upper.json", s)
+	testfile.EqualJSON(be, "example/upper.json", s)
 
 	// Output:
 }

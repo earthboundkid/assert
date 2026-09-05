@@ -11,8 +11,8 @@ func (be TB) Zero[T any](value T) TB {
 	return be
 }
 
-// NotZero asserts value is [Truthy].
-func (be TB) NotZero[T any](value T) TB {
+// Truthy asserts value is [Truthy].
+func (be TB) Truthy[T any](value T) TB {
 	be.Helper()
 	if !Truthy(value) {
 		be.fatalf("got: %v", value)

@@ -14,7 +14,7 @@ func Test(t *testing.T) {
 	okayTests := []func(be assert.TB){
 		func(be assert.TB) { be.Zero(time.Time{}.Local()) },
 		func(be assert.TB) { be.Zero([]string(nil)) },
-		func(be assert.TB) { be.NotZero([]string{""}) },
+		func(be assert.TB) { be.Truthy([]string{""}) },
 		func(be assert.TB) { _ = be.OK(func() (int, error) { return 1, nil }()) },
 		func(be assert.TB) { be.True(true) },
 		func(be assert.TB) { be.False(false) },
@@ -49,9 +49,9 @@ func Test(t *testing.T) {
 
 	badTests := []func(be assert.TB){
 		func(be assert.TB) { be.SlicesEqual([]string{}, []string{""}) },
-		func(be assert.TB) { be.NotZero(time.Time{}.Local()) },
+		func(be assert.TB) { be.Truthy(time.Time{}.Local()) },
 		func(be assert.TB) { be.Zero([]string{""}) },
-		func(be assert.TB) { be.NotZero([]string(nil)) },
+		func(be assert.TB) { be.Truthy([]string(nil)) },
 		func(be assert.TB) {
 			be.OK(func() (int, error) { return 0, errors.New("") }())
 		},

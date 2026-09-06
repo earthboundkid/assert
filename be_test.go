@@ -15,6 +15,7 @@ func Test(t *testing.T) {
 		func(be assert.TB) { be.Falsey(time.Time{}.Local()) },
 		func(be assert.TB) { be.Falsey([]string(nil)) },
 		func(be assert.TB) { be.Truthy([]string{""}) },
+		func(be assert.TB) { be.NilError(nil) },
 		func(be assert.TB) { _ = be.OK(func() (int, error) { return 1, nil }()) },
 		func(be assert.TB) { _, _ = be.OK2(func() (int, string, error) { return 1, "x", nil }()) },
 		func(be assert.TB) { be.True(true) },
@@ -53,6 +54,7 @@ func Test(t *testing.T) {
 		func(be assert.TB) { be.Truthy(time.Time{}.Local()) },
 		func(be assert.TB) { be.Falsey([]string{""}) },
 		func(be assert.TB) { be.Truthy([]string(nil)) },
+		func(be assert.TB) { be.NilError(errors.New("")) },
 		func(be assert.TB) {
 			be.OK(func() (int, error) { return 0, errors.New("") }())
 		},

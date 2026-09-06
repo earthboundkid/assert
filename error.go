@@ -52,6 +52,14 @@ func (be TB) OK2[T1, T2 any](v1 T1, v2 T2, err error) (T1, T2) {
 	return v1, v2
 }
 
+// NilError asserts err is nil.
+func (be TB) NilError(err error) TB {
+	if err != nil {
+		be.fatalf("expected nil; got: %#v", err)
+	}
+	return be
+}
+
 // ErrorIs asserts that got [errors.Is] target.
 func (be TB) ErrorIs(got, target error) TB {
 	be.Helper()

@@ -54,8 +54,9 @@ func (be TB) OK2[T1, T2 any](v1 T1, v2 T2, err error) (T1, T2) {
 
 // NilError asserts err is nil.
 func (be TB) NilError(err error) TB {
+	be.Helper()
 	if err != nil {
-		be.fatalf("expected nil; got: %#v", err)
+		be.fatalf("expected nil; got: %v", err)
 	}
 	return be
 }

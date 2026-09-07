@@ -28,7 +28,7 @@ func Example() {
 
 	var err error
 	be.
-		Falsey(err).                   // good
+		NilError(err).                 // good
 		ErrorIs(nil, err).             // good
 		Truthy(err).                   // bad
 		ErrorIs(err, os.ErrPermission) // bad

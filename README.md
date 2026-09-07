@@ -59,7 +59,7 @@ f := be.OK(os.Open("nosuchfile")) // bad, and also returns nil *os.File
 be.Falsey(f)                      // good
 
 var err error
-be.Falsey(err)                     // good
+be.NilError(err).                 // good
 be.ErrorIs(nil, err)              // good
 be.Truthy(err)                    // bad
 be.ErrorIs(err, os.ErrPermission) // bad

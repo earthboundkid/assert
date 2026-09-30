@@ -25,17 +25,18 @@ func TestRunAll(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
+	// Keep in-sync with runall_example_test.go
 	assert.FailsNow(t).
-		Run("test", func(be assert.TB) {
-			assert.FailsNow(be).Run("subtest", func(be assert.TB) {
-				be.Run("sub-subtest", func(be assert.TB) {
-					be.Equal(1, 1)
-				})
-			})
+		Run("empty case", func(be assert.TB) {
+			be.Equal(strings.ToUpper(""), "")
+		}).
+		Run("mixed case", func(be assert.TB) {
+			be.Equal(strings.ToUpper("aBc"), "ABC")
 		})
 }
 
 func TestTB_Run(t *testing.T) {
+	// Test sub-sub-tests
 	assert.FailsNow(t).
 		Run("test", func(be assert.TB) {
 			assert.FailsNow(be).Run("subtest", func(be assert.TB) {
@@ -46,9 +47,11 @@ func TestTB_Run(t *testing.T) {
 		})
 }
 
-func BenchmarkTB_Run(t *testing.B) {
-	assert.FailsNow(t).
+func BenchmarkTB_Run(b *testing.B) {
+	assert.FailsNow(b).
 		Run("test", func(be assert.TB) {
-			be.Equal(1, 1)
+			for be.TB.(*testing.B).Loop() {
+				be.Equal(1, 1)
+			}
 		})
 }

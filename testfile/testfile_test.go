@@ -10,9 +10,9 @@ import (
 	"github.com/earthboundkid/assert/testfile"
 )
 
-func runPaths(t *testing.T, inpath string) []string {
+func runPaths(tb testing.TB, inpath string) []string {
 	var paths []string
-	testfile.Run(t, inpath, func(be assert.TB, path string) {
+	testfile.Run(tb, inpath, func(be assert.TB, path string) {
 		paths = append(paths, path)
 	})
 	return paths

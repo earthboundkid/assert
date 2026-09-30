@@ -7,13 +7,13 @@ import (
 	"github.com/earthboundkid/assert"
 )
 
-func ExampleRun() {
+func ExampleRunAll() {
 	// TestCapitalize
 	_ = func(t *testing.T) {
 		type testcase struct {
 			in, want string
 		}
-		assert.Run(t, map[string]testcase{
+		assert.RunAll(t, map[string]testcase{
 			"blank":            {in: "", want: ""},
 			"a":                {in: "a", want: "A"},
 			"already upper":    {in: "A", want: "A"},
@@ -22,5 +22,18 @@ func ExampleRun() {
 		}, func(be assert.TB, tc testcase) {
 			be.Equal(strings.ToUpper(tc.in), tc.want)
 		})
+	}
+}
+
+func ExampleTB_Run() {
+	// TestCapitalize
+	_ = func(t *testing.T) {
+		assert.FailsNow(t).
+			Run("empty case", func(be assert.TB) {
+				be.Equal(strings.ToUpper(""), "")
+			}).
+			Run("mixed case", func(be assert.TB) {
+				be.Equal(strings.ToUpper("aBc"), "ABC")
+			})
 	}
 }

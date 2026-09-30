@@ -161,18 +161,20 @@ func WriteJSON(t testing.TB, path string, v any) {
 
 // Run a subtest for each file matching the provided glob pattern.
 // The [assert.TB] is [FailsNow] by default.
-func Run(t *testing.T, glob string, f func(be assert.TB, match string)) {
-	t.Helper()
+func Run(tb testing.TB, glob string, f func(be assert.TB, match string)) {
+	tb.Helper()
+
 	matches, err := filepath.Glob(glob)
 	if err != nil {
-		t.Errorf("%v", err)
+		tb.Errorf("%v", err)
 		return
 	}
-	for i := range matches {
-		match := matches[i]
+	be, ok := tb.(assert.TB)
+	if !ok {
+		be = assert.FailsNow(tb)
+	}
+	for _, match := range matches {
 		name := filepath.Base(match)
-		t.Run(name, func(t *testing.T) {
-			f(assert.FailsNow(t), match)
-		})
+		be.Run(name, func(be assert.TB) { f(be, match) })
 	}
 }

@@ -9,7 +9,7 @@ import (
 
 func TestRunAll(t *testing.T) {
 	// TestCapitalize
-	// Keep in-sync with runall_example_test.go
+	// Keep in-sync with run_example_test.go
 	type testcase struct {
 		in, want string
 	}
@@ -25,9 +25,9 @@ func TestRunAll(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-	// Keep in-sync with runall_example_test.go
-	assert.FailsNow(t).
-		Run("empty case", func(be assert.TB) {
+	// Keep in-sync with run_example_test.go
+	assert.
+		Run(t, "empty case", func(be assert.TB) {
 			be.Equal(strings.ToUpper(""), "")
 		}).
 		Run("mixed case", func(be assert.TB) {

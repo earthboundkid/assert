@@ -7,15 +7,18 @@ import (
 	"testing"
 )
 
-// Run runs all the test cases in the map with [TB.Run] using map keys as sub-test names.
+// Run runs the sub-test with [TB.Run].
 //
 // The [TB] associated with the sub-test is [FailsNow] by default.
-//
-// Deprecated: Use [RunAll].
-//
-//go:fix inline
-func Run[Testcase any](tb testing.TB, m map[string]Testcase, f func(be TB, tc Testcase)) TB {
-	return RunAll(tb, m, f)
+func Run(tb testing.TB, name string, f func(be TB)) TB {
+	tb.Helper()
+
+	be, ok := tb.(TB)
+	if !ok {
+		be = FailsNow(tb)
+	}
+
+	return be.Run(name, f)
 }
 
 // RunAll runs all the test cases in the map with [TB.RunAll] using map keys as sub-test names.

@@ -25,11 +25,11 @@ func ExampleRunAll() {
 	}
 }
 
-func ExampleTB_Run() {
+func ExampleRun() {
 	// TestCapitalize
 	_ = func(t *testing.T) {
-		assert.FailsNow(t).
-			Run("empty case", func(be assert.TB) {
+		assert.
+			Run(t, "empty case", func(be assert.TB) {
 				be.Equal(strings.ToUpper(""), "")
 			}).
 			Run("mixed case", func(be assert.TB) {

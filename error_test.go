@@ -13,7 +13,7 @@ func TestNotOK(t *testing.T) {
 		err error
 		ok  bool
 	}
-	assert.Run(t, map[string]testcase{
+	assert.RunAll(t, map[string]testcase{
 		"zero+nil":  {v: 0, err: nil, ok: false},
 		"value+nil": {v: 1, err: nil, ok: false},
 		"value+err": {v: 1, err: errors.New(""), ok: false},
